@@ -36,11 +36,13 @@
     const bAdd = (cfg.brightness / 100) * 255;
     r += bAdd; g += bAdd; b += bAdd;
 
-    // contrast (0..200, 100 = neutral)
-    const cFactor = (259 * (cfg.contrast + 255)) / (255 * (259 - cfg.contrast));
-    r = cFactor * (r - 128) + 128;
-    g = cFactor * (g - 128) + 128;
-    b = cFactor * (b - 128) + 128;
+    // contrast (0..200, 100 = neutral) — simple scale about mid-grey. The
+    // classic (259*(c+255))/(255*(259-c)) formula expects a -255..255 input;
+    // feeding it a 0..200 value multiplies by ~3x and clips every highlight.
+    const cFactor = cfg.contrast / 100;
+    r = (r - 128) * cFactor + 128;
+    g = (g - 128) * cFactor + 128;
+    b = (b - 128) * cFactor + 128;
 
     // saturation (0..200, 100 = neutral)
     const lum = 0.299 * r + 0.587 * g + 0.114 * b;
@@ -59,6 +61,21 @@
     }
 
     return [clamp(r, 0, 255), clamp(g, 0, 255), clamp(b, 0, 255)];
+  }
+
+  // Piecewise-linear lookup through the toneCurve control points.
+  function evalCurve(pts, t) {
+    if (!pts || pts.length < 2) return t;
+    if (t <= pts[0].x) return pts[0].y;
+    for (let i = 1; i < pts.length; i++) {
+      if (t <= pts[i].x) {
+        const p0 = pts[i - 1], p1 = pts[i];
+        const span = p1.x - p0.x;
+        const f = span <= 0 ? 0 : (t - p0.x) / span;
+        return p0.y + (p1.y - p0.y) * f;
+      }
+    }
+    return pts[pts.length - 1].y;
   }
 
   function hexToRgb(hex) {
@@ -95,15 +112,25 @@
 
   // ---------- setup ----------
   function init() {
-    // cover-fit draw of source image into offscreen canvas at W x H
-    const ir = img.width / img.height, cr = W / H;
+    // Pick the source rect: an explicit crop if configured, else the whole image.
     let sx, sy, sw, sh;
-    if (ir > cr) {
-      sh = img.height; sw = sh * cr;
-      sx = (img.width - sw) / 2; sy = 0;
+    if (CONFIG.crop) {
+      sx = CONFIG.crop.x * img.width;
+      sy = CONFIG.crop.y * img.height;
+      sw = CONFIG.crop.w * img.width;
+      sh = CONFIG.crop.h * img.height;
     } else {
-      sw = img.width; sh = sw / cr;
-      sx = 0; sy = (img.height - sh) / 2;
+      sx = 0; sy = 0; sw = img.width; sh = img.height;
+    }
+
+    // Cover-fit that rect to the canvas aspect, trimming the long axis.
+    const rectAspect = sw / sh, canvasAspect = W / H;
+    if (rectAspect > canvasAspect) {
+      const nw = sh * canvasAspect;
+      sx += (sw - nw) / 2; sw = nw;
+    } else {
+      const nh = sw / canvasAspect;
+      sy += (sh - nh) / 2; sh = nh;
     }
     octx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
 
@@ -131,7 +158,7 @@
     buildGrainTile();
 
     canvas.addEventListener("click", () => { playing = !playing; if (playing) requestAnimationFrame(loop); });
-    requestAnimationFrame(loop);
+    loop(0); // paint the first frame now rather than waiting on rAF
   }
 
   function sampleCells() {
@@ -155,9 +182,40 @@
         }
         r /= n; g /= n; b /= n;
         [r, g, b] = adjustColor(r, g, b, CONFIG);
+
+        // Tonal shaping runs on the exposure-corrected colour *before* the
+        // tint, so the curve's control points stay tied to real photo
+        // luminance rather than to post-tint values.
+        let rawLum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        if (CONFIG.invert) rawLum = 1 - rawLum;
+        let lum = clamp(evalCurve(CONFIG.toneCurve, rawLum), 0, 1);
+
+        // Knock out the background: bright + colour-neutral is wall, bright +
+        // warm is skin. Only bites above fromLum, so dark neutral things (the
+        // hoodie, the mic) keep their ink.
+        const wg = CONFIG.warmthGate;
+        if (wg && wg.enabled) {
+          const warmth = (r - b) / 255;
+          const keep = clamp((warmth - wg.min) / (wg.max - wg.min), 0, 1);
+          const inZone = clamp((rawLum - wg.fromLum) / wg.feather, 0, 1);
+          lum *= (1 - inZone) + inZone * keep;
+        }
+
         [r, g, b] = applyTint(r, g, b, hexToRgb(CONFIG.tint), CONFIG.tintOpacity, CONFIG.overlayBlend);
-        let lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-        if (CONFIG.invert) lum = 1 - lum;
+
+        // Phosphor ramp: colour the cell by the tint scaled to its luminance,
+        // with the hottest cells blooming toward white like a real CRT.
+        if (CONFIG.phosphor > 0) {
+          const [tr, tg, tb] = hexToRgb(CONFIG.tint);
+          const hot = clamp((lum - 0.86) / 0.14, 0, 1) * 0.5;
+          const pr = (tr * lum) + (255 - tr * lum) * hot;
+          const pg = (tg * lum) + (255 - tg * lum) * hot;
+          const pb = (tb * lum) + (255 - tb * lum) * hot;
+          const mix = CONFIG.phosphor / 100;
+          r += (pr - r) * mix;
+          g += (pg - g) * mix;
+          b += (pb - b) * mix;
+        }
         // deterministic per-cell pseudo-random for coverage/density/glitch seeding
         const seed = Math.sin(gx * 127.1 + gy * 311.7) * 43758.5453;
         const rnd = seed - Math.floor(seed);
