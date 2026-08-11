@@ -158,6 +158,7 @@
     buildGrainTile();
 
     canvas.addEventListener("click", () => { playing = !playing; if (playing) requestAnimationFrame(loop); });
+    window.__paintAt = loop; // capture-tooling hook, harmless no-op for viewers
     loop(0); // paint the first frame now rather than waiting on rAF
   }
 

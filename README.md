@@ -1,4 +1,6 @@
 ### 🎞️ ASCII Portrait
+[![Animated ASCII portrait — green terminal-style dithered rendering of Isyraf speaking](assets/ascii-portrait.gif)](https://yapsancode.github.io/yapsancode/)
+
 A Canvas2D recreation of [21st.dev's "Terminal Pikachu" ascii effect](https://21st.dev/community/ascii) — animated dithered portrait, live at [yapsancode.github.io/yapsancode](https://yapsancode.github.io/yapsancode/) ([source](index.html)).
 
 # 💫 About Me:
