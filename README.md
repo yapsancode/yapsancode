@@ -17,10 +17,10 @@ AI assistant for job seekers.
 
 ### 🛠️ Stuff I use
 
-**Languages:** `Python` `TypeScript` `JavaScript` `SQL`
-**LLM / AI:** `Gemini API` `LangChain` `LangGraph` `LiteLLM` `RAG` `Agentic AI` `LLM evals`
-**Backend & Ops:** `FastAPI` `Next.js` `Docker` `Google Cloud Run` `GitHub Actions`
-**Databases:** `PostgreSQL` `Supabase` `MySQL` `Firebase` `MongoDB`
+`Flutter` `Next.js` `Python` `FastAPI` `Laravel`  
+`Docker` `GCP` `Google Cloud Run` `GitHub Actions`
+`LangChain` `LangGraph` `LiteLLM` `RAG` `Agentic AI` `LLM evals`
+`PostgreSQL` `Supabase` `MySQL` `Firebase` `MongoDB`
 
 ### ✍️ Random Dev Quote
 ![](https://quotes-github-readme.vercel.app/api?type=horizontal&theme=radical)
