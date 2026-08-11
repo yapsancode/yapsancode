@@ -1,6 +1,6 @@
-👋 Hi, I’m Isyraf
+# 👋 Hi, I’m Isyraf
 
-**Full Stack Developer** &bull; **AI Enginer**
+**Software engineer from Malaysia 🇲🇾**
 
 ### 🌱 Current arc
 
