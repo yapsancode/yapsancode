@@ -1,9 +1,4 @@
-### 🎞️ ASCII Portrait
-[![Animated ASCII portrait — green terminal-style dithered rendering of Isyraf speaking](assets/ascii-portrait.gif)](https://yapsancode.github.io/yapsancode/)
-
-A Canvas2D recreation of [21st.dev's "Terminal Pikachu" ascii effect](https://21st.dev/community/ascii) — animated dithered portrait, live at [yapsancode.github.io/yapsancode](https://yapsancode.github.io/yapsancode/) ([source](index.html)).
-
-# 💫 About Me:
+## 💫 About Me:
 👋 Hi, I’m Isyraf, a passionate coder crafting awesome projects!<br>👀 I’m interested in building sleek web apps and diving into low level programming.<br>🌱 I’m currently learning JS Framework, starting with Next.js.<br>💞️ I’m looking to collaborate on open-source web dev or maybe cloud/embedded projects.<br>📫 Reach out me by email: muhammadisyrafafifi@gmail.com.
 
 
