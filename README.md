@@ -4,7 +4,7 @@
 
 ### 🌱 Current arc
 
-> Full-stack → DevOps → Cloud → AI/ML
+> Full-stack → Cloud → **DevOps / AIOps** → Agentic AI
 
 ### 🔨 Currently building
 
@@ -17,8 +17,10 @@ AI assistant for job seekers.
 
 ### 🛠️ Stuff I use
 
-`Flutter` `Next.js` `Python` `FastAPI` `Laravel`  
-`Docker` `GCP` `MongoDB` `PostgreSQL` `GitHub`
+**Languages:** `Python` `TypeScript` `JavaScript` `SQL`
+**LLM / AI:** `Gemini API` `LangChain` `LangGraph` `LiteLLM` `RAG` `Agentic AI` `LLM evals`
+**Backend & Ops:** `FastAPI` `Next.js` `Docker` `Google Cloud Run` `GitHub Actions`
+**Databases:** `PostgreSQL` `Supabase` `MySQL` `Firebase` `MongoDB`
 
 ### ✍️ Random Dev Quote
 ![](https://quotes-github-readme.vercel.app/api?type=horizontal&theme=radical)
