@@ -1,10 +1,10 @@
 # 👋 Hi, I'm Isyraf
 
-**Fullstack developer from Shah Alam, Malaysia 🇲🇾**
+**Fullstack developer from Malaysia 🇲🇾**
 
 I ship products end-to-end: architecture decisions to deployment and user
 impact. I recently completed Gamuda AI Academy (Yayasan Gamuda x Google Cloud),
-where my capstone team's project won **1st place** at Demo Day.
+where my capstone team's project won **1st place** at Demo Day. Check it here: [Baymax](https://github.com/yapsancode/baymax)
 
 ### 🧭 Current arc
 
@@ -19,7 +19,7 @@ certification through a 12-week upskilling sprint.
 | Project | What it is |
 |---|---|
 | [**KerjaKit**](https://kerjakit.com) | AI resume tailor — paste a job posting, get an honest match report and an ATS-safe one-page PDF. Open-core; 31 GitHub stars on the CLI. |
-| **Qalam** | First-ever Jawi handwriting dataset + a tutor app that verifies your writing. Looking for a Jawi-literate collaborator. |
+| **Qalam** | Jawi handwriting dataset + a tutor app that verifies your writing. |
 
 ### 🛠️ Stuff I use
 
